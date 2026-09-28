@@ -1,0 +1,52 @@
+-- Table Setup & Sample Data
+CREATE TABLE customers (
+    id NUMBER PRIMARY KEY,
+    name VARCHAR2(50),
+    address VARCHAR2(100),
+    salary NUMBER
+);
+
+INSERT INTO customers VALUES (1, 'Ramesh', 'Ahmadabad', 2000);
+INSERT INTO customers VALUES (2, 'Khilan', 'Delhi', 1500);
+INSERT INTO customers VALUES (3, 'Kaushik', 'Kota', 2000);
+INSERT INTO customers VALUES (4, 'Chaitali', 'Mumbai', 6500);
+INSERT INTO customers VALUES (5, 'Hardik', 'Bhopal', 8500);
+INSERT INTO customers VALUES (6, 'Komal', 'MP', 4500);
+
+-- Enable Output Buffer
+SET SERVEROUTPUT ON;
+
+-- Implicit Cursor Example
+DECLARE
+    total_rows NUMBER(2);
+BEGIN
+    UPDATE customers
+    SET salary = salary + 500;
+    
+    IF SQL%NOTFOUND THEN
+        DBMS_OUTPUT.PUT_LINE('no customers selected');
+    ELSIF SQL%FOUND THEN
+        total_rows := SQL%ROWCOUNT;
+        DBMS_OUTPUT.PUT_LINE(total_rows || ' customers selected ');
+    END IF;
+END;
+/
+
+-- Explicit Cursor Example
+DECLARE
+    c_id customers.id%TYPE;
+    c_name customers.name%TYPE;
+    c_addr customers.address%TYPE;
+    
+    CURSOR c_customers IS
+        SELECT id, name, address FROM customers;
+BEGIN
+    OPEN c_customers;
+    LOOP
+        FETCH c_customers INTO c_id, c_name, c_addr;
+        EXIT WHEN c_customers%NOTFOUND;
+        DBMS_OUTPUT.PUT_LINE(c_id || ' ' || c_name || ' ' || c_addr);
+    END LOOP;
+    CLOSE c_customers;
+END;
+/

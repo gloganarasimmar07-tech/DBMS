@@ -1,0 +1,67 @@
+-- Create Authors table
+CREATE TABLE Authors (
+    AuthorID INT PRIMARY KEY AUTO_INCREMENT,
+    FirstName VARCHAR(50),
+    LastName VARCHAR(50)
+);
+
+-- Create Books table
+CREATE TABLE Books (
+    BookID INT PRIMARY KEY AUTO_INCREMENT,
+    Title VARCHAR(100),
+    Genre VARCHAR(50),
+    PublicationYear INT
+);
+
+-- Create BookAuthors table (many-to-many: Books <-> Authors)
+CREATE TABLE BookAuthors (
+    BookID INT,
+    AuthorID INT,
+    PRIMARY KEY (BookID, AuthorID),
+    FOREIGN KEY (BookID) REFERENCES Books(BookID),
+    FOREIGN KEY (AuthorID) REFERENCES Authors(AuthorID)
+);
+
+-- Create Borrowers table
+CREATE TABLE Borrowers (
+    BorrowerID INT PRIMARY KEY AUTO_INCREMENT,
+    FirstName VARCHAR(50),
+    LastName VARCHAR(50),
+    MembershipDate DATE
+);
+
+-- Create BorrowedBooks table (many-to-many: Borrowers <-> Books)
+CREATE TABLE BorrowedBooks (
+    BorrowerID INT,
+    BookID INT,
+    BorrowedDate DATE,
+    ReturnDate DATE,
+    PRIMARY KEY (BorrowerID, BookID),
+    FOREIGN KEY (BorrowerID) REFERENCES Borrowers(BorrowerID),
+    FOREIGN KEY (BookID) REFERENCES Books(BookID)
+);
+
+-- Populate Authors
+INSERT INTO Authors (FirstName, LastName) VALUES ('George', 'Orwell');
+INSERT INTO Authors (FirstName, LastName) VALUES ('Aldous', 'Huxley');
+INSERT INTO Authors (FirstName, LastName) VALUES ('J.K.', 'Rowling');
+
+-- Populate Books
+INSERT INTO Books (Title, Genre, PublicationYear) VALUES ('1984', 'Dystopian', 1949);
+INSERT INTO Books (Title, Genre, PublicationYear) VALUES ('Brave New World', 'Dystopian', 1932);
+INSERT INTO Books (Title, Genre, PublicationYear) VALUES ('Harry Potter and the Sorcerer''s Stone', 'Fantasy', 1997);
+
+-- Populate BookAuthors
+INSERT INTO BookAuthors (BookID, AuthorID) VALUES (1, 1);
+INSERT INTO BookAuthors (BookID, AuthorID) VALUES (2, 2);
+INSERT INTO BookAuthors (BookID, AuthorID) VALUES (3, 3);
+
+-- Populate Borrowers
+INSERT INTO Borrowers (FirstName, LastName, MembershipDate) VALUES ('John', 'Doe', '2023-01-01');
+INSERT INTO Borrowers (FirstName, LastName, MembershipDate) VALUES ('Jane', 'Smith', '2023-02-15');
+
+-- Populate BorrowedBooks
+INSERT INTO BorrowedBooks (BorrowerID, BookID, BorrowedDate, ReturnDate)
+VALUES (1, 1, '2023-03-01', '2023-03-15');
+INSERT INTO BorrowedBooks (BorrowerID, BookID, BorrowedDate, ReturnDate)
+VALUES (2, 3, '2023-03-05', '2023-03-20');

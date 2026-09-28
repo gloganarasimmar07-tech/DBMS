@@ -1,0 +1,58 @@
+-- Table Creation
+CREATE TABLE Student (
+    StudentID INT PRIMARY KEY,
+    Name VARCHAR(30),
+    Age INT
+);
+
+CREATE TABLE Courses (
+    CourseID INT PRIMARY KEY,
+    CourseName VARCHAR(20)
+);
+
+CREATE TABLE Enrollments (
+    StudentID INT REFERENCES Student(StudentID),
+    CourseID INT REFERENCES Courses(CourseID)
+);
+
+-- Data Insertion
+INSERT INTO Student VALUES (1, 'Alice', 20);
+INSERT INTO Student VALUES (2, 'Bob', 22);
+INSERT INTO Student VALUES (3, 'Charlie', 21);
+INSERT INTO Student VALUES (4, 'David', 19);
+
+INSERT INTO Courses VALUES (101, 'Database Management');
+INSERT INTO Courses VALUES (102, 'Data Structures');
+INSERT INTO Courses VALUES (103, 'Web Development');
+
+INSERT INTO Enrollments VALUES (1, 101);
+INSERT INTO Enrollments VALUES (3, 101);
+INSERT INTO Enrollments VALUES (2, 103);
+INSERT INTO Enrollments VALUES (4, 103);
+
+-- Simple Queries
+SELECT * FROM Student;
+
+SELECT Name, Age FROM Student WHERE Age > 20;
+
+-- Nested Queries
+SELECT Name FROM Student 
+WHERE StudentID IN (
+    SELECT StudentID FROM Enrollments 
+    WHERE CourseID = (
+        SELECT CourseID FROM Courses WHERE CourseName = 'Database Management'
+    )
+);
+
+SELECT CourseID, CourseName FROM Courses 
+WHERE CourseID IN (
+    SELECT CourseID FROM Enrollments 
+    GROUP BY CourseID 
+    HAVING COUNT(*) > 1
+);
+
+-- Subqueries
+SELECT AVG(Age) AS AverageAge FROM Student;
+
+SELECT Name, Age FROM Student 
+WHERE Age > (SELECT AVG(Age) FROM Student);
