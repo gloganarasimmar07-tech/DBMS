@@ -1,0 +1,132 @@
+SET SERVEROUTPUT ON;
+SET LINESIZE 150;
+SET PAGESIZE 100;
+
+-- CREATE TABLES
+
+CREATE TABLE categories (
+    category_id NUMBER PRIMARY KEY,
+    category_name VARCHAR2(50) NOT NULL
+);
+
+CREATE TABLE authors (
+    author_id NUMBER PRIMARY KEY,
+    author_name VARCHAR2(100) NOT NULL
+);
+
+CREATE TABLE books (
+    book_id NUMBER PRIMARY KEY,
+    title VARCHAR2(150) NOT NULL,
+    author_id NUMBER REFERENCES authors(author_id),
+    category_id NUMBER REFERENCES categories(category_id),
+    publication_year NUMBER(4),
+    total_copies NUMBER DEFAULT 1,
+    available_copies NUMBER DEFAULT 1
+);
+
+CREATE TABLE members (
+    member_id NUMBER PRIMARY KEY,
+    member_name VARCHAR2(100) NOT NULL,
+    email VARCHAR2(100) UNIQUE,
+    phone VARCHAR2(15),
+    join_date DATE DEFAULT SYSDATE
+);
+
+CREATE TABLE loans (
+    loan_id NUMBER PRIMARY KEY,
+    book_id NUMBER REFERENCES books(book_id),
+    member_id NUMBER REFERENCES members(member_id),
+    issue_date DATE DEFAULT SYSDATE,
+    due_date DATE,
+    return_date DATE
+);
+
+-- SEQUENCES
+
+CREATE SEQUENCE category_seq START WITH 1 INCREMENT BY 1;
+CREATE SEQUENCE author_seq START WITH 1 INCREMENT BY 1;
+CREATE SEQUENCE book_seq START WITH 1 INCREMENT BY 1;
+CREATE SEQUENCE member_seq START WITH 1 INCREMENT BY 1;
+CREATE SEQUENCE loan_seq START WITH 1 INCREMENT BY 1;
+
+-- CATEGORIES
+
+INSERT INTO categories VALUES (category_seq.NEXTVAL, 'Programming');
+INSERT INTO categories VALUES (category_seq.NEXTVAL, 'Database');
+INSERT INTO categories VALUES (category_seq.NEXTVAL, 'Fiction');
+INSERT INTO categories VALUES (category_seq.NEXTVAL, 'Science');
+INSERT INTO categories VALUES (category_seq.NEXTVAL, 'History');
+
+-- AUTHORS
+
+INSERT INTO authors VALUES (author_seq.NEXTVAL, 'Robert C. Martin');
+INSERT INTO authors VALUES (author_seq.NEXTVAL, 'Ramez Elmasri');
+INSERT INTO authors VALUES (author_seq.NEXTVAL, 'George Orwell');
+INSERT INTO authors VALUES (author_seq.NEXTVAL, 'Stephen Hawking');
+INSERT INTO authors VALUES (author_seq.NEXTVAL, 'Yuval Noah Harari');
+
+-- BOOKS
+
+INSERT INTO books VALUES
+(book_seq.NEXTVAL, 'Clean Code', 1, 1, 2008, 5, 4);
+
+INSERT INTO books VALUES
+(book_seq.NEXTVAL, 'Database Systems', 2, 2, 2016, 4, 3);
+
+INSERT INTO books VALUES
+(book_seq.NEXTVAL, '1984', 3, 3, 1949, 6, 5);
+
+INSERT INTO books VALUES
+(book_seq.NEXTVAL, 'A Brief History of Time', 4, 4, 1988, 3, 2);
+
+INSERT INTO books VALUES
+(book_seq.NEXTVAL, 'Sapiens', 5, 5, 2011, 5, 5);
+
+INSERT INTO books VALUES
+(book_seq.NEXTVAL, 'The Art of Computer Programming', 1, 1, 2000, 2, 2);
+
+-- MEMBERS
+
+INSERT INTO members VALUES
+(member_seq.NEXTVAL, 'Arun Kumar',
+'arun@gmail.com', '9876543210', DATE '2025-01-10');
+
+INSERT INTO members VALUES
+(member_seq.NEXTVAL, 'Priya Sharma',
+'priya@gmail.com', '9876543211', DATE '2025-02-15');
+
+INSERT INTO members VALUES
+(member_seq.NEXTVAL, 'Rahul Das',
+'rahul@gmail.com', '9876543212', DATE '2025-03-20');
+
+INSERT INTO members VALUES
+(member_seq.NEXTVAL, 'Sneha Rao',
+'sneha@gmail.com', '9876543213', DATE '2025-04-05');
+
+-- LOANS
+
+INSERT INTO loans VALUES
+(loan_seq.NEXTVAL, 1, 1,
+DATE '2025-06-01',
+DATE '2025-06-15',
+DATE '2025-06-12');
+
+INSERT INTO loans VALUES
+(loan_seq.NEXTVAL, 2, 2,
+DATE '2025-06-05',
+DATE '2025-06-19',
+NULL);
+
+INSERT INTO loans VALUES
+(loan_seq.NEXTVAL, 3, 3,
+DATE '2025-06-10',
+DATE '2025-06-24',
+DATE '2025-06-20');
+
+INSERT INTO loans VALUES
+(loan_seq.NEXTVAL, 4, 4,
+DATE '2025-06-12',
+DATE '2025-06-26',
+NULL);
+
+COMMIT;
