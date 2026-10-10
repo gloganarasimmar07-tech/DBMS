@@ -1,0 +1,26 @@
+-- Create Keyspace
+CREATE KEYSPACE college_ks
+WITH REPLICATION = {
+    'class': 'SimpleStrategy',
+    'replication_factor': 3
+};
+
+-- Use Keyspace
+USE college_ks;
+
+-- Create Student Table
+CREATE TABLE student (
+    rollno INT PRIMARY KEY,
+    name TEXT,
+    dept TEXT
+);
+
+-- Insert Records
+INSERT INTO student (rollno, name, dept)
+VALUES (101, 'RAJA', 'CSE');
+
+INSERT INTO student (rollno, name, dept)
+VALUES (102, 'PRIYA', 'IT');
+
+-- Display Records
+SELECT * FROM student;
